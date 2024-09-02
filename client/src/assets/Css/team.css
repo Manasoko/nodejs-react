@@ -1,0 +1,18 @@
+.team-members {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+}
+
+.team-member img {
+    width: 10rem;
+    border-radius: 50%;
+    height: 10rem;
+}
+
+@media only screen and (max-width: 768px) {
+    .team-members {
+        grid-template-columns: repeat(1, 100%);
+    }
+}

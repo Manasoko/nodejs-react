@@ -1,0 +1,78 @@
+.property {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    margin-bottom: 3rem;
+}
+
+.property-detail {
+    margin: 1rem 2rem 0 1rem;
+    background-color: var(--white--);
+    border-radius: 20px;
+    box-shadow: 0px 6px 10px 4px rgba(0, 0, 0, 0.3);
+}
+
+.property-detail h3 {
+    font-size: 1rem;
+    font-weight: 100;
+    max-width: 95%;
+}
+
+.property-img {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.property-detail img {
+    width: 100%;
+    height: 50%;
+}
+
+.property-info {
+    margin: 0 0.3rem;
+}
+
+.property-description {
+    font-size: 0.9rem;
+    font-weight: lighter;
+}
+
+.sold-banner {
+    position: absolute;
+    transform: rotate(319deg) translateX(-2.3rem) translateY(-1rem);
+    transform-origin: center;
+    background: var(--white--);
+    margin: 0;
+    padding: 0 0.4rem;
+    color: var(--black--);
+    top: 10px;
+    width: 10rem;
+    text-align: center;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.property-detail p {
+    max-width: 95%;
+}
+
+@media only screen and (max-width: 700px) {
+    .property {
+        grid-template-columns: repeat(1, 100%);
+        margin-bottom: 0;
+    }
+
+    .property-detail {
+        margin-bottom: 3rem;
+    }
+} 
+
+
+@media only screen and (min-width: 700px) and (max-width: 900px) {
+    .property {
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 0;
+    }
+    .property-detail {
+        margin-bottom: 3.5rem;
+    }
+}
