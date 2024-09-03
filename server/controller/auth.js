@@ -34,8 +34,7 @@ module.exports = router.post('/add-user', async (req, res, next) => {
         });
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            console.log('A user with this email already exists.');
-            res.status(400).json({
+            return res.status(400).json({
                 error: 'A user with this email already exists.',
             });
         } else {
@@ -47,7 +46,6 @@ module.exports = router.post('/add-user', async (req, res, next) => {
 module.exports = router.post('/login-user', async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
-        console.log([username, email, password]);
         const user = await UserDB.findOne({ where: { email: email } });
         if (!user) {
             return res.status(400).json({
@@ -59,12 +57,18 @@ module.exports = router.post('/login-user', async (req, res, next) => {
             console.log('Password match. Proceeding...');
             req.session.user = {
                 id: user.id,
-                name: user.name,
-                email: user.email
+                name: username,
+                email: email,
             };
             req.session.isLoggedIn = true;
             req.session.save(err => {
-                if (err) return console.log('Session save error:', err);
+                if (err)
+                    return res.status(404).json({
+                        message: 'Session not saved',
+                    });
+                return res.status(200).json({
+                    message: "Session saved successfully"
+                });
             });
         } else {
             return res.status(404).json({

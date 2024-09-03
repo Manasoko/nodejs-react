@@ -13,6 +13,7 @@ const User = require('./models/user');
 
 const corsOptions = {
     origin: 'http://localhost:5173',
+    crendential: true
 };
 
 const sessionStore = new sequelizeStore({

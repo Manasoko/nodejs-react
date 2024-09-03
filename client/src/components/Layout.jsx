@@ -58,7 +58,9 @@ function Layout() {
 
         const fetchAPI = async () => {
             try {
-                const response = await axios.get('http://localhost:7070/api');
+                const response = await axios.get('http://localhost:7070/api', {
+                    withCredentials: true
+                });
                 console.log(response.data.isLogin);
                 setIsLogin(response.data.isLogin);
             } catch (error) {
