@@ -1,27 +1,26 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-
-const router = express.Router();
+const { validationResult } = require('express-validator');
 
 const UserDB = require('../models/user');
 
-module.exports = router.post('/add-user', async (req, res, next) => {
+exports.postSignup = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+            error: errors.array()[0].msg
+        });
+    }
     try {
-        const { username, email, password, phoneNumber, confirmPassword } =
+        const { username, email, password, phoneNumber } =
             req.body;
-        if (password !== confirmPassword) {
-            return res.status(400).json({
-                error: 'Password and confirm password do not match.',
-            });
-        }
         const hashedPassword = await bcrypt.hash(password, 12);
-        const user = await UserDB.create({
+        req.session.user = await UserDB.create({
             name: username,
             email: email,
             password: hashedPassword,
             phoneNumber: phoneNumber,
         });
-        req.session.user = user;
         req.session.isLoggedIn = true;
 
         req.session.save(err => {
@@ -41,15 +40,21 @@ module.exports = router.post('/add-user', async (req, res, next) => {
             console.error(error);
         }
     }
-});
+};
 
-module.exports = router.post('/login-user', async (req, res, next) => {
+exports.postLogin = async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+            error: errors.array()[0].msg
+        });
+    }
     try {
         const { username, email, password } = req.body;
         const user = await UserDB.findOne({ where: { email: email } });
         if (!user) {
             return res.status(400).json({
-                error: 'User is not in databse. Create a new user',
+                error: 'User is not in database. Create a new user',
             });
         }
         const doMatch = await bcrypt.compare(password, user.password);
@@ -61,15 +66,13 @@ module.exports = router.post('/login-user', async (req, res, next) => {
                 email: email,
             };
             req.session.isLoggedIn = true;
-            req.session.save(err => {
+            await req.session.save(err => {
                 if (err)
                     return res.status(404).json({
                         message: 'Session not saved',
                     });
-                return res.status(200).json({
-                    message: "Session saved successfully"
-                });
             });
+            console.log(req.session.user);
         } else {
             return res.status(404).json({
                 message: 'Incorrect Password',
@@ -81,4 +84,4 @@ module.exports = router.post('/login-user', async (req, res, next) => {
         });
         console.log(error);
     }
-});
+};

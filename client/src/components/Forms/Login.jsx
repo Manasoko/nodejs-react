@@ -14,18 +14,20 @@ function Login() {
 
     const handleData = async event => {
         event.preventDefault();
-        console.log(inputs);    
+        console.log(inputs);
         try {
             const response = await axios.post('http://localhost:7070/api/login-user', inputs);
             console.log('User added', response);
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setError(error.response.data.error);
+            } else if (error.response.status === 422) {
+                setError(error.response.data.error);
             } else {
                 console.log(error)
                 setError('An unexpected error occurred. Please try again.');
             }
-        };
+        }
     };
 
     return (
@@ -54,7 +56,10 @@ function Login() {
                 />
                 <input type="submit" className="btn" id="submit" value="Login"/>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <div className="left">
+                <a href="#">Reset Password</a>
+            </div>
+            {error && <p style={{color: 'red'}}>{error}</p>}
         </div>
     );
 }

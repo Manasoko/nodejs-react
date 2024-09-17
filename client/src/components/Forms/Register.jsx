@@ -20,16 +20,18 @@ function Register() {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setError(error.response.data.error);
+            } else if(error.response.status === 422) {
+                setError(error.response.data.error);
             } else {
                 console.log(error)
                 setError('An unexpected error occurred. Please try again.');
             }
-        };
+        }
     }
 
     return (
         <div className="main-form-page">
-            <form className="login-form" onSubmit={handleSubmit}>
+            <form className="login-form" onSubmit={handleSubmit} noValidate>
                 <label htmlFor="username">Username</label>
                 <input type="text"
                     id="username"
